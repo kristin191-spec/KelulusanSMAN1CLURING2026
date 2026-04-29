@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan SMAN 1 CLURING</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #166534;
+            --bg: #dcfce7;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--dark); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        .logo { width: 80px; height: auto; margin-bottom: 15px; }
+        
+        h2 { margin: 3px 0; line-height: 1.2; font-size: 1.4rem; color: var(--primary); }
+        h3 { margin: 0; color: #475569; font-size: 1rem; font-weight: normal; }
+        p { color: #64748b; margin-top: 10px; }
+
+        /* Countdown Style */
+        #countdown { display: flex; justify-content: space-around; margin: 20px 0; background: #f1f5f9; padding: 15px; border-radius: 10px; font-weight: bold; }
+        
+        /* Form Style */
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { font-size: 0.9rem; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #1d4ed8; }
+
+        /* Result Page Style */
+        .result-box { display: none; text-align: center; animation: fadeIn 0.5s; }
+        .info-siswa { text-align: left; background: #f8fafc; padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid #e2e8f0; }
+        .info-siswa div { margin-bottom: 5px; font-size: 0.95rem; }
+        .status-lulus { font-size: 1.5rem; font-weight: 800; color: var(--success); margin-top: 10px; display: block; }
+        
+        .btn-back { background: #64748b; margin-top: 10px; font-size: 0.8rem; padding: 8px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page-login">
+        <img src="https://i.postimg.cc/05V5NRL9/Logo-Smaring.png" alt="Logo" class="logo">
+        <h2>MENUJU PENGUMUMAN</h2>
+        <h3>TAHUN AJARAN 2025/2026</h3>
+        <h2>SMAN 1 CLURING</h2>
+        
+        <div id="countdown-area">
+            <p>Pengumuman akan dibuka dalam:</p>
+            <div id="countdown">
+                <div><span id="days">0</span><br><small>Hari</small></div>
+                <div><span id="hours">0</span><br><small>Jam</small></div>
+                <div><span id="minutes">0</span><br><small>Menit</small></div>
+                <div><span id="seconds">0</span><br><small>Detik</small></div>
+            </div>
+        </div>
+
+        <div id="login-form" class="hidden">
+            <div class="input-group">
+                <label>NISN</label>
+                <input type="text" id="nisn" placeholder="Masukkan 10 digit NISN">
+            </div>
+            <div class="input-group">
+                <label>Tanggal Lahir</label>
+                <input type="date" id="tgl_lahir">
+            </div>
+            <button onclick="cekKelulusan()">Cek Hasil Kelulusan</button>
+        </div>
+    </div>
+
+    <div id="page-result" class="result-box">
+        <img src="https://i.postimg.cc/05V5NRL9/Logo-Smaring.png" alt="Logo" class="logo" style="width: 60px;">
+        <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">HASIL KELULUSAN</div>
+        <hr style="border: 0.5px solid #e2e8f0; margin: 15px 0;">
+        
+        <div id="content-hasil"></div>
+        
+        <button class="btn-back" onclick="location.reload()">Kembali</button>
+    </div>
+</div>
+
+<script>
+    // Data Siswa (Gunakan data Anda yang banyak tadi)
+    const dataSiswa = [
+        {
+    "NISN": "0078120306",
+    "TTL": "2007-12-09",
+    "Nama": "ADINDA DEVITA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075824655",
+    "TTL": "2007-12-15",
+    "Nama": "AHMAD KOHAR KURNIAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075116572",
+    "TTL": "2007-06-09",
+    "Nama": "ALIKA NUR RAHMAWATI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0063585188",
+    "TTL": "2006-12-19",
+    "Nama": "ANGGA KURNIA PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083583522",
+    "TTL": "2008-05-26",
+    "Nama": "ANINDYA PRADIPTASARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086304450",
+    "TTL": "2008-01-31",
+    "Nama": "AULINA BILKISYA MAHARANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089385868",
+    "TTL": "2008-01-31",
+    "Nama": "AULIYA BILKISYA MAHARANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089031202",
+    "TTL": "2008-10-19",
+    "Nama": "AURA NISA MA'ARIF",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075363077",
+    "TTL": "2007-01-18",
+    "Nama": "AYUNDA FELICIA DAMAYANTI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081405375",
+    "TTL": "2008-08-01",
+    "Nama": "BUNGA AGNESIA FAIRUS ZAHRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076298534",
+    "TTL": "2007-07-23",
+    "Nama": "CAHYA RAJABI HIDAYAT",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075758666",
+    "TTL": "2007-11-01",
+    "Nama": "CESYA NOVI INGGRAINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078811901",
+    "TTL": "2007-12-11",
+    "Nama": "DAVA REZA SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076523253",
+    "TTL": "2007-12-28",
+    "Nama": "DECA IGA CANTIKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087353633",
+    "TTL": "2008-06-21",
+    "Nama": "DIRA MITHA AZKIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076304757",
+    "TTL": "2007-10-08",
+    "Nama": "DIVA RAMADHANIA ZAHRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086026758",
+    "TTL": "2008-06-07",
+    "Nama": "ENZY AUFA ARDINI PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075441087",
+    "TTL": "2007-06-30",
+    "Nama": "FANNISA DIAN CAHYANI ILMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089407900",
+    "TTL": "2008-02-09",
+    "Nama": "GITA FEBRILYA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083949063",
+    "TTL": "2008-02-18",
+    "Nama": "HAVILAH FEBY AMELIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078978266",
+    "TTL": "2007-09-05",
+    "Nama": "IKFISYA NABIL DAMASUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3062074536",
+    "TTL": "2006-06-20",
+    "Nama": "INTAN INDAH DWI CAHYANTI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089055453",
+    "TTL": "2008-04-24",
+    "Nama": "KAFFAH AFTIKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088613178",
+    "TTL": "2008-04-24",
+    "Nama": "KHANZA NAYLA HUDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077074124",
+    "TTL": "2007-03-21",
+    "Nama": "KHILYATUL NAFISA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073792755",
+    "TTL": "2007-11-30",
+    "Nama": "KHUMALAWATI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078928496",
+    "TTL": "2007-09-04",
+    "Nama": "MOH. AWAN WAFI BAKHTIAR",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075582785",
+    "TTL": "2007-11-05",
+    "Nama": "MUHAMAD RIZA AL ZAMZAMI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075119487",
+    "TTL": "2007-10-15",
+    "Nama": "NADIN OKTAVIANA SAFITRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0063332378",
+    "TTL": "2006-11-10",
+    "Nama": "NAZWA NOVALIYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076712398",
+    "TTL": "2007-12-17",
+    "Nama": "NUR LAILA DWI SAGITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3075056142",
+    "TTL": "2007-07-03",
+    "Nama": "ROMI DWI JULIANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083004688",
+    "TTL": "2008-02-20",
+    "Nama": "SIREN IKRIMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071509591",
+    "TTL": "2007-10-31",
+    "Nama": "YONI RIZKY LANGIT",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084284593",
+    "TTL": "2008-01-08",
+    "Nama": "ZECKO NUR PRADANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079788452",
+    "TTL": "2007-06-10",
+    "Nama": "ADIS MELISYA KAELASARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085742250",
+    "TTL": "2008-04-21",
+    "Nama": "ALFIAN WIDYATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074791696",
+    "TTL": "2007-08-15",
+    "Nama": "AMANIA ALFI HUSNI SALSABILA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087316864",
+    "TTL": "2008-01-05",
+    "Nama": "AQEYLLA BALQIS AHLA STYANIRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083737243",
+    "TTL": "2008-04-07",
+    "Nama": "AULIA AYUNING TIYAS PALUPI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081280392",
+    "TTL": "2008-01-19",
+    "Nama": "BILQIS LINTANG DELINDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085429171",
+    "TTL": "2008-01-22",
+    "Nama": "CHERYL KARTIKA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075312881",
+    "TTL": "2007-07-03",
+    "Nama": "DAVINA AJENG PRATIWI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082688628",
+    "TTL": "2008-03-19",
+    "Nama": "DINA MAULIDATU ULYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077135175",
+    "TTL": "2007-07-14",
+    "Nama": "DITAN AULIA MENTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072444647",
+    "TTL": "2007-09-23",
+    "Nama": "DM. RAMADHANI KURNIAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082516546",
+    "TTL": "2008-01-29",
+    "Nama": "ELISA ANANDA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082329894",
+    "TTL": "2008-05-11",
+    "Nama": "HILDA MAILINDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086634641",
+    "TTL": "2008-03-14",
+    "Nama": "I LUH RARA BUNGA UNTANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084981983",
+    "TTL": "2008-03-06",
+    "Nama": "INGGRIT RAHAYU SETIANINGSIH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084461171",
+    "TTL": "2008-03-17",
+    "Nama": "JESISCA MARETA ANGGRAINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072967043",
+    "TTL": "2007-07-27",
+    "Nama": "KHANZA FAIRUS HEART",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073062088",
+    "TTL": "2007-10-18",
+    "Nama": "MIRATUS ROSIDAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3070606459",
+    "TTL": "2007-04-20",
+    "Nama": "NADIN APRILIYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073333305",
+    "TTL": "2007-10-31",
+    "Nama": "NAILLA RAHMA ERDAMYA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079215057",
+    "TTL": "2007-10-25",
+    "Nama": "NAURA VIANA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084758671",
+    "TTL": "2008-04-24",
+    "Nama": "NESSA NASILA INKA NOVERITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089038424",
+    "TTL": "2008-01-17",
+    "Nama": "NILSA SANDRA WIJAYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071344337",
+    "TTL": "2007-11-19",
+    "Nama": "NOVA LITA AYU KIRANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089175846",
+    "TTL": "2008-05-12",
+    "Nama": "NUR MALA MAYLYNDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088007644",
+    "TTL": "2008-02-11",
+    "Nama": "PUTRI NUR LAILI FEBRIANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076790142",
+    "TTL": "2007-06-03",
+    "Nama": "RENATA BETA SAPUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077284154",
+    "TTL": "2007-11-12",
+    "Nama": "RESTI DWI NOVITASARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074517617",
+    "TTL": "2007-02-21",
+    "Nama": "RETNO WAHYU TRI UTAMI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075649701",
+    "TTL": "2007-07-31",
+    "Nama": "SHELVIANA NUR CAHYANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075268121",
+    "TTL": "2007-04-10",
+    "Nama": "STEVANNY CECILIA NUR BALQIS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085666608",
+    "TTL": "2008-03-24",
+    "Nama": "VIONA LHIA AMANDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072648273",
+    "TTL": "2007-05-19",
+    "Nama": "VRISHABHA CARLO JULIO ARDHIANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081043269",
+    "TTL": "2008-05-05",
+    "Nama": "WILDAN NUR AWALUDIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088473203",
+    "TTL": "2008-04-26",
+    "Nama": "ZHAFIRA RIVANKA BRAVORIZKY",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079345572",
+    "TTL": "2007-12-11",
+    "Nama": "ZULFAA KAMILIYYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078112078",
+    "TTL": "2007-10-16",
+    "Nama": "AFRIZCA FITRIA CINTA PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079141903",
+    "TTL": "2007-07-06",
+    "Nama": "AGENG RIZQI IRAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075652868",
+    "TTL": "2007-09-26",
+    "Nama": "AHMAD NAZRIL RAMADHAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087172946",
+    "TTL": "2008-01-04",
+    "Nama": "AHMAD NAZWA KAFIN ADZKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073781021",
+    "TTL": "2007-12-04",
+    "Nama": "BINTANG ADELIA PUTRI DIKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078402084",
+    "TTL": "2007-10-27",
+    "Nama": "CALISTA DIANTI PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078030231",
+    "TTL": "2007-06-12",
+    "Nama": "CANTIKA LUTFIA NINGSIH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086376821",
+    "TTL": "2008-03-16",
+    "Nama": "CARISA LAURA ISYAFRIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078083641",
+    "TTL": "2007-09-13",
+    "Nama": "CELSI DAVINA RAMADHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071964784",
+    "TTL": "2007-08-03",
+    "Nama": "CHELCI AGESTRIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088742155",
+    "TTL": "2008-04-26",
+    "Nama": "CIKA AISIANA PUTRI EFFENDI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089744650",
+    "TTL": "2008-04-14",
+    "Nama": "CLARA PUTRI RAYHAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084212335",
+    "TTL": "2008-03-16",
+    "Nama": "DIESNA PUTRI DWI HAPSARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079788166",
+    "TTL": "2007-11-25",
+    "Nama": "DINDA KUMALA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075821780",
+    "TTL": "2007-04-16",
+    "Nama": "DONY KUSUMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071408136",
+    "TTL": "2007-05-10",
+    "Nama": "FIRDAUS MEYSHA JANATI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076035944",
+    "TTL": "2007-06-14",
+    "Nama": "HAFIZ YUNIAR PRADIKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086110175",
+    "TTL": "2008-03-24",
+    "Nama": "HELDONA IRGA MAULANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075604180",
+    "TTL": "2007-11-28",
+    "Nama": "HELMY GANISMA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075673945",
+    "TTL": "2007-11-10",
+    "Nama": "INTAN NURAINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071038341",
+    "TTL": "2007-10-04",
+    "Nama": "IRSYAD FALAH RAMADHAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086805857",
+    "TTL": "2008-02-10",
+    "Nama": "MOCH JHONNATHANS NURHARIYONO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081488168",
+    "TTL": "2008-03-26",
+    "Nama": "MOCH. FARIDZ AZMI AZIZ",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082517084",
+    "TTL": "2008-03-09",
+    "Nama": "MOHAMAD FAHAD AL GHOZALI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076466824",
+    "TTL": "2007-06-26",
+    "Nama": "MUHAMMAD ABIDZAR ALGHIFFARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072607533",
+    "TTL": "2007-09-01",
+    "Nama": "NASTITI HAVA NUR SUKARNO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084682411",
+    "TTL": "2008-01-06",
+    "Nama": "NINA ZIAN RAHMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072586825",
+    "TTL": "2007-05-10",
+    "Nama": "RANGGA MEI SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071802640",
+    "TTL": "2007-07-20",
+    "Nama": "RARA KARINA JAUZA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075926744",
+    "TTL": "2007-09-13",
+    "Nama": "RESKYA AYU RAHMADHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081591937",
+    "TTL": "2008-02-21",
+    "Nama": "TAZKIA PUTRI MAHARANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082941607",
+    "TTL": "2008-04-21",
+    "Nama": "TERRY ILHAMDHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082579440",
+    "TTL": "2008-03-04",
+    "Nama": "VERLIZA ZIL EVELYN ARIFIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087431493",
+    "TTL": "2008-01-21",
+    "Nama": "VIRDA PUTRI AMEL LIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081840315",
+    "TTL": "2008-09-04",
+    "Nama": "WHINA AYU RAMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086396348",
+    "TTL": "2008-01-16",
+    "Nama": "YAMCA ABRIANTO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072012885",
+    "TTL": "2008-02-21",
+    "Nama": "RAHMA AYU LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071621291",
+    "TTL": "2007-11-07",
+    "Nama": "AHMAD BRIAN MAULANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072168321",
+    "TTL": "2007-06-14",
+    "Nama": "AHMAD FAZAFIL KUNAIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079664616",
+    "TTL": "2008-08-17",
+    "Nama": "ALEXANDER DAFA ANDRIANO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073613448",
+    "TTL": "2007-04-11",
+    "Nama": "ANGGA BARQI ISTAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081576193",
+    "TTL": "2007-07-15",
+    "Nama": "AULIA SAFIRA SANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075242852",
+    "TTL": "2008-09-03",
+    "Nama": "AURELIA ANISA RAHMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075485407",
+    "TTL": "2007-10-19",
+    "Nama": "DANIEL OKTAVIAN ARRIDO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079124891",
+    "TTL": "2007-03-19",
+    "Nama": "DAVA MAHESTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085959332",
+    "TTL": "2007-08-04",
+    "Nama": "DIMAS AGUSTI PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082126163",
+    "TTL": "2008-01-31",
+    "Nama": "FAREL CAHYA FIRDAUS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0067150111",
+    "TTL": "2008-05-02",
+    "Nama": "HAIKAL BALYA HAFIDZIL BAHRAIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083036726",
+    "TTL": "2006-05-26",
+    "Nama": "JUNDII AHMAD FIRAAS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089743199",
+    "TTL": "2008-06-11",
+    "Nama": "KEVIN ADITYA PUTRA HERMANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078156743",
+    "TTL": "2008-06-11",
+    "Nama": "KEYZA AYU PUTRI HENISHA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074103453",
+    "TTL": "2007-08-01",
+    "Nama": "KHANZA AURYN ADELLIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077940962",
+    "TTL": "2007-10-26",
+    "Nama": "M. HARIR RIFAI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081945093",
+    "TTL": "2007-12-10",
+    "Nama": "MIFTAH WARDANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072776026",
+    "TTL": "2008-03-02",
+    "Nama": "MOCH. MARCEL KURNIAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084478589",
+    "TTL": "2007-12-20",
+    "Nama": "MOH REYVAN SETYA AKBAR",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073349123",
+    "TTL": "2008-05-17",
+    "Nama": "MOH. HILMI MAULANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075378629",
+    "TTL": "2007-07-14",
+    "Nama": "NELISIA MELANIE PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072938946",
+    "TTL": "2007-11-28",
+    "Nama": "NOVAL ARDIANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072500191",
+    "TTL": "2007-11-27",
+    "Nama": "NOVIYANTI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083550012",
+    "TTL": "2007-04-04",
+    "Nama": "OLIVIONA AULIDA PUTRI BACHTIAR",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084495009",
+    "TTL": "2008-05-11",
+    "Nama": "PUSPITA ADIRATNA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088061018",
+    "TTL": "2008-05-06",
+    "Nama": "PUTRI AMELIA ANINDITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084958688",
+    "TTL": "2008-01-22",
+    "Nama": "PUTRI AYU BUNGA LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083183670",
+    "TTL": "2008-04-22",
+    "Nama": "RADITIYA PUTRA PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082472747",
+    "TTL": "2008-02-12",
+    "Nama": "RAYA RIZKY ARTHA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3069635046",
+    "TTL": "2007-07-15",
+    "Nama": "SAHRIL RIZKY PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073264291",
+    "TTL": "2007-10-22",
+    "Nama": "TIARA DWI MAHARANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076049603",
+    "TTL": "2007-06-04",
+    "Nama": "TRIANA JUNIARTINING TYAS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075414074",
+    "TTL": "2007-05-15",
+    "Nama": "VANEZA MEYDINA FILLAREAL",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081866476",
+    "TTL": "2008-06-24",
+    "Nama": "YAYANG AGUSTA NINGRUM",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089360907",
+    "TTL": "2008-01-19",
+    "Nama": "ZAHWA NISRINA ANZANY",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074210128",
+    "TTL": "2007-10-31",
+    "Nama": "AFFAN NASUTION BAHTIAR",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072290646",
+    "TTL": "2007-07-13",
+    "Nama": "ALFICIO ODY PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076174619",
+    "TTL": "2007-12-12",
+    "Nama": "ALVIN DEWANGGA PUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086752092",
+    "TTL": "2008-03-23",
+    "Nama": "AMELIA BUNGA LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082465092",
+    "TTL": "2008-07-07",
+    "Nama": "BAGUS NUR ROHMAN SYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072876522",
+    "TTL": "2007-11-25",
+    "Nama": "D. BINTANG AQIELA SUTANDHI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073644943",
+    "TTL": "2007-08-18",
+    "Nama": "DEWI AYU ABDILAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074447977",
+    "TTL": "2007-04-22",
+    "Nama": "DINDA SETIARINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083454804",
+    "TTL": "2008-02-19",
+    "Nama": "FAHRUL FERDIYANO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083499150",
+    "TTL": "2008-02-21",
+    "Nama": "FERLITA AYU PERMATASARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073530360",
+    "TTL": "2007-06-11",
+    "Nama": "FIQIH ROSYDA WARDAYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072425689",
+    "TTL": "2007-03-27",
+    "Nama": "GITA PRAMESTI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088722441",
+    "TTL": "2008-03-30",
+    "Nama": "IRSYA MAULANA FIRMANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076325044",
+    "TTL": "2008-11-29",
+    "Nama": "KEZIA ANASTASIA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073941948",
+    "TTL": "2007-12-15",
+    "Nama": "LINTANG CANDRA SOERYONO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083459091",
+    "TTL": "2008-06-04",
+    "Nama": "M. FARDHAN ARGITAMA PRASETYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079835649",
+    "TTL": "2007-12-25",
+    "Nama": "MAULIDA AZZAHRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081066507",
+    "TTL": "2008-03-29",
+    "Nama": "MOCH. FAIRUZ ALBAIS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089261646",
+    "TTL": "2008-02-03",
+    "Nama": "MOH. FARIS TATA PRADITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079316057",
+    "TTL": "2007-07-03",
+    "Nama": "MUHAMAD INDRA PRASETYO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089774246",
+    "TTL": "2008-02-13",
+    "Nama": "MUHAMMAD JILAN CAESAR SANTOSO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072846718",
+    "TTL": "2007-10-27",
+    "Nama": "PUTRI ZAHROTUS SITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085210696",
+    "TTL": "2008-10-29",
+    "Nama": "QUEENA ATHAYA CAYADEWI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078634781",
+    "TTL": "2007-02-15",
+    "Nama": "REGA DWI ADI KURNIAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078791109",
+    "TTL": "2007-11-09",
+    "Nama": "RENDY PRASETYO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076791284",
+    "TTL": "2007-09-27",
+    "Nama": "RENDY SEVTA RAMADHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079205082",
+    "TTL": "2007-12-12",
+    "Nama": "REYNALDY EKO NURMANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082459902",
+    "TTL": "2008-01-08",
+    "Nama": "RICKY YAFI RASENDRIYA PRASETYO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085131933",
+    "TTL": "2008-06-01",
+    "Nama": "SIERA AULIA NASKHA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078488581",
+    "TTL": "2007-12-16",
+    "Nama": "TEDI DAVIDSEN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074865109",
+    "TTL": "2007-11-14",
+    "Nama": "TRIO WILDAN SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076400815",
+    "TTL": "2007-10-29",
+    "Nama": "VAIRUS NIDHAM",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076215903",
+    "TTL": "2007-09-20",
+    "Nama": "YARDHAN GHALIB RAHMADHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077013852",
+    "TTL": "2007-12-01",
+    "Nama": "ZENEVER ERVAN VENANTU",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077084615",
+    "TTL": "2007-09-15",
+    "Nama": "ABIYYU ARKAN NAFIS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089989855",
+    "TTL": "2008-01-09",
+    "Nama": "ADEN NUR ALEXA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086671437",
+    "TTL": "2008-04-02",
+    "Nama": "APTA ENGGAR MATOFANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072551015",
+    "TTL": "2007-12-17",
+    "Nama": "BERTA RISMA LUSIANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078318965",
+    "TTL": "2007-05-05",
+    "Nama": "BRILLIANT WICAKSONO IMMANUEL",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075144382",
+    "TTL": "2007-12-15",
+    "Nama": "DESYA ANGGRENI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077733102",
+    "TTL": "2007-06-12",
+    "Nama": "DEVIRA YUNIARTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074847827",
+    "TTL": "2007-06-12",
+    "Nama": "DIKI RISALDI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074791206",
+    "TTL": "2007-07-09",
+    "Nama": "DINDA DWI ANGGRIANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078091799",
+    "TTL": "2007-09-01",
+    "Nama": "DWI KARTIKA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089979913",
+    "TTL": "2008-03-27",
+    "Nama": "EGI DWI ERVANANDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082032627",
+    "TTL": "2008-03-23",
+    "Nama": "ELVIA ALFAT MAHARANI SHOIMUL WAIDAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078666402",
+    "TTL": "2007-12-19",
+    "Nama": "FAYE REYHAN LEANDRA WIRAWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072243790",
+    "TTL": "2007-10-13",
+    "Nama": "FIRDA AMELIA FITRIANINGRUM",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0094761115",
+    "TTL": "2009-01-01",
+    "Nama": "HAPPY DAYTANIA RAHAYU",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3084859000",
+    "TTL": "2008-10-05",
+    "Nama": "INGGRID SIFHA RAMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071625517",
+    "TTL": "2007-12-18",
+    "Nama": "KEVINDRA DENNIS ARIZKY",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085930762",
+    "TTL": "2008-05-02",
+    "Nama": "LEVI PUTRI SABRINA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3073791014",
+    "TTL": "2007-07-08",
+    "Nama": "LINDA AYU LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079745273",
+    "TTL": "2007-05-01",
+    "Nama": "MAYLAN AKHDAN ALLBARRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077156797",
+    "TTL": "2007-11-21",
+    "Nama": "MOHAMAD DAMAR AR RIZKY",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072948479",
+    "TTL": "2007-05-08",
+    "Nama": "MUHAMAD FARIT SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "3073409581",
+    "TTL": "2007-08-17",
+    "Nama": "MUHAMMAD YATAMA ANGGA MARDHIKA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076681176",
+    "TTL": "2007-11-10",
+    "Nama": "NATANIA ANINDITA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0054324029",
+    "TTL": "2007-06-20",
+    "Nama": "NAYLA FAIRUZ RAHMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072704000",
+    "TTL": "2008-01-05",
+    "Nama": "NOVAL MUHAMMAD RIDWAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074904205",
+    "TTL": "2007-08-03",
+    "Nama": "RENO RAYNANDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075355002",
+    "TTL": "2007-08-31",
+    "Nama": "RHENO DAVARA WIJAYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075065072",
+    "TTL": "2007-09-28",
+    "Nama": "SABITA NAYSILA RAMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088150092",
+    "TTL": "2008-07-11",
+    "Nama": "SALSA HAFIDZOTURROUDHOH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072291050",
+    "TTL": "2007-08-29",
+    "Nama": "SHEREN AMELIA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087748826",
+    "TTL": "2008-02-19",
+    "Nama": "STEVEN DWIGHT SUGITO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078343512",
+    "TTL": "2007-09-29",
+    "Nama": "ULIMA SUPRIYATI NINGTYAS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087841054",
+    "TTL": "2008-03-17",
+    "Nama": "VINA SETYO WINARSIH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077355879",
+    "TTL": "2007-05-24",
+    "Nama": "YURIKE MELANIE",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084986420",
+    "TTL": "2008-03-29",
+    "Nama": "ZALFAANY RIFAT PRIYANTO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078383044",
+    "TTL": "2007-06-05",
+    "Nama": "A. HARIRIL FUADI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074941356",
+    "TTL": "2007-05-20",
+    "Nama": "ANGGITA AULIA ALFIANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081867647",
+    "TTL": "2008-05-05",
+    "Nama": "ANGGITA MAULIDINA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084126437",
+    "TTL": "2008-02-09",
+    "Nama": "ANISA RIZQI KARIMAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084602223",
+    "TTL": "2008-08-21",
+    "Nama": "ARDWI YANTO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075633057",
+    "TTL": "2008-02-10",
+    "Nama": "AULIA NAZWA RIZMA YUDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075677453",
+    "TTL": "2007-04-29",
+    "Nama": "AYU ULANDARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075583754",
+    "TTL": "2007-05-29",
+    "Nama": "BIMA ADI SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072298585",
+    "TTL": "2007-12-03",
+    "Nama": "BIMA DANUARTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0142301349",
+    "TTL": "2008-07-05",
+    "Nama": "BRYAN EVANDRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087281239",
+    "TTL": "2008-02-10",
+    "Nama": "BUNGA AURA PURI SHINTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084181293",
+    "TTL": "2008-02-23",
+    "Nama": "ELVIRA ARISTA CAHYANTI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073376714",
+    "TTL": "2007-12-22",
+    "Nama": "FARA NAYLA HIDAYAT",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071813884",
+    "TTL": "2007-09-14",
+    "Nama": "FIKRI RAMADAN TAQWIM",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079167924",
+    "TTL": "2007-03-18",
+    "Nama": "FRISCA MARTHA FIRGIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089460592",
+    "TTL": "2008-07-21",
+    "Nama": "GALANG KRISTIAN FIRNANDO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077289378",
+    "TTL": "2007-06-03",
+    "Nama": "HILDA NINA NILAWATI ANGGRAINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085721350",
+    "TTL": "2008-04-09",
+    "Nama": "JENIVA SALSABILA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089736431",
+    "TTL": "2008-07-19",
+    "Nama": "KEIZA JULIA CALLISTIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074762114",
+    "TTL": "2007-09-26",
+    "Nama": "KELVIN ANDIKA RAMADANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071107078",
+    "TTL": "2007-11-27",
+    "Nama": "KIRANA INDIRA HAFI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089823139",
+    "TTL": "2008-01-02",
+    "Nama": "LELY NOFITA SARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071218919",
+    "TTL": "2007-12-18",
+    "Nama": "MOCH BAIHAQI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087276602",
+    "TTL": "2008-05-22",
+    "Nama": "MOHAMAD RAIHAN PAMUNGKAS",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078699325",
+    "TTL": "2007-11-30",
+    "Nama": "NOVIKA IRAWATI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082430369",
+    "TTL": "2008-03-02",
+    "Nama": "NOVITA ANA TASYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076648606",
+    "TTL": "2007-11-26",
+    "Nama": "NUR VINA SALSABILA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077848295",
+    "TTL": "2007-12-31",
+    "Nama": "REYVALDO PUTERA DANUARTHA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083978006",
+    "TTL": "2008-09-11",
+    "Nama": "TIRTA PELIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079497508",
+    "TTL": "2007-09-17",
+    "Nama": "TYAS RIDWANANDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072579370",
+    "TTL": "2007-05-30",
+    "Nama": "VANY SONIA PRATIWI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083036795",
+    "TTL": "2008-01-17",
+    "Nama": "ZAHRA ALIFINA PERMATA ANGGI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0089603594",
+    "TTL": "2008-01-07",
+    "Nama": "AHMAD JOKO SAPUTRO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085782931",
+    "TTL": "2008-01-02",
+    "Nama": "ANDIKA AINURROFIQ HERDIYANTO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073729995",
+    "TTL": "2007-10-04",
+    "Nama": "ANGGI AYU RAHMAD DANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087675454",
+    "TTL": "2008-04-26",
+    "Nama": "ARINA INDANA NAFIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077143304",
+    "TTL": "2007-01-22",
+    "Nama": "BAGAS JIHAD SAPUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0084913512",
+    "TTL": "2008-06-12",
+    "Nama": "CLARISA AULIA RAWANI PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085328779",
+    "TTL": "2008-08-29",
+    "Nama": "DINDA DWI JIHAN SALSABILA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087188207",
+    "TTL": "2008-03-04",
+    "Nama": "DIVA PUNGKY SALSABELA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075475791",
+    "TTL": "2007-11-10",
+    "Nama": "ELLEN LUTFIA ROSADA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0101280319",
+    "TTL": "2007-03-10",
+    "Nama": "FADLI JIHADU SABILLAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081089182",
+    "TTL": "2008-05-17",
+    "Nama": "GAGAH ASTENO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079542186",
+    "TTL": "2007-06-11",
+    "Nama": "GILANG DWI SAPUTRO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076436557",
+    "TTL": "2007-12-24",
+    "Nama": "ILHAM PERMANA PUTRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071864125",
+    "TTL": "2007-11-21",
+    "Nama": "INDYTA NUOVA AZZAWA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082684747",
+    "TTL": "2008-02-13",
+    "Nama": "JEFRI JOKO PRAYUGO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079597443",
+    "TTL": "2007-10-30",
+    "Nama": "LUZAEN SUGITO KEMAN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075839428",
+    "TTL": "2007-04-01",
+    "Nama": "MOHAMMAD WILDAN HAQIQI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077460316",
+    "TTL": "2007-08-05",
+    "Nama": "MONICA DEWI CAROLINA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077952182",
+    "TTL": "2007-07-25",
+    "Nama": "MUHAMMAD MILZA NURZELA RISKI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085014427",
+    "TTL": "2008-05-24",
+    "Nama": "NISA FRANSISCA RANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078942946",
+    "TTL": "2007-11-20",
+    "Nama": "NOVA LOURENSIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077383057",
+    "TTL": "2007-06-09",
+    "Nama": "RAMA DAYU ANANTARA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086453902",
+    "TTL": "2008-05-11",
+    "Nama": "RANGGA JIMMY PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079037825",
+    "TTL": "2007-12-28",
+    "Nama": "SRI TANJUNG",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079395874",
+    "TTL": "2007-12-22",
+    "Nama": "SULAIMAN NUR RIZKY",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079969953",
+    "TTL": "2007-05-19",
+    "Nama": "SYAKILLA AGNI MEYSINTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0074371495",
+    "TTL": "2007-03-02",
+    "Nama": "TATA MAHESA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076655375",
+    "TTL": "2007-06-27",
+    "Nama": "TAUFIQURROHMAN EKA WARDHANA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072965356",
+    "TTL": "2007-11-08",
+    "Nama": "THALITA NOVIA ALTHAF",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082437525",
+    "TTL": "2008-03-28",
+    "Nama": "VELLA ANNIFA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072995794",
+    "TTL": "2007-09-04",
+    "Nama": "WISNU TEGAR ARVENDRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073190453",
+    "TTL": "2007-11-27",
+    "Nama": "YOSUA BEETHOVEN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076534825",
+    "TTL": "2007-07-27",
+    "Nama": "YULIA TRI AGUSTIN",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079766516",
+    "TTL": "2007-11-23",
+    "Nama": "ZAHRA BERNADINA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077523605",
+    "TTL": "2007-08-03",
+    "Nama": "ZAULA HAFIZ PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075758373",
+    "TTL": "2007-11-05",
+    "Nama": "ANGGUN NOVITASARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077386285",
+    "TTL": "2007-04-16",
+    "Nama": "AZAHRA PRAMISTA MAYLANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077605703",
+    "TTL": "2007-03-01",
+    "Nama": "DANDY ABRAR HIBRIZI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0071762977",
+    "TTL": "2007-12-11",
+    "Nama": "DAVIN IRVA PRATAMA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085654318",
+    "TTL": "2008-05-12",
+    "Nama": "DAYU MEY SAFITRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078860745",
+    "TTL": "2007-04-10",
+    "Nama": "DIAH AYUNING SALOKA DWI ARINZA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073753201",
+    "TTL": "2007-09-07",
+    "Nama": "DIAN AYU LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078932774",
+    "TTL": "2007-12-31",
+    "Nama": "GHINA AULIA ZAHRA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072532548",
+    "TTL": "2007-09-07",
+    "Nama": "HILDA RAHAYU",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0087006457",
+    "TTL": "2008-01-13",
+    "Nama": "INEZ CALISTA RAHMA NURRIZZA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083384926",
+    "TTL": "2008-01-08",
+    "Nama": "INTAN NUR AINI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076288654",
+    "TTL": "2007-08-09",
+    "Nama": "JELSICA RATIH OGESTA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072987796",
+    "TTL": "2007-09-14",
+    "Nama": "LIDYA PUJI LESTARI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078487785",
+    "TTL": "2007-06-15",
+    "Nama": "M. AMIR HAMSYAH YAHYA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0088680633",
+    "TTL": "2008-05-03",
+    "Nama": "M. SABRIAN NIDZAM",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0083031528",
+    "TTL": "2008-05-13",
+    "Nama": "MAYLANI PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076550413",
+    "TTL": "2007-04-21",
+    "Nama": "MOCH. TENGKU FIRMANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073588882",
+    "TTL": "2007-08-21",
+    "Nama": "MOH. HEYRUL ILYAZ",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0075131070",
+    "TTL": "2009-01-02",
+    "Nama": "MOHAMAD ALEXSANDER",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0086997759",
+    "TTL": "2007-06-20",
+    "Nama": "MOHAMMAD FAREL DWI ARDIYANSYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077953265",
+    "TTL": "2008-01-23",
+    "Nama": "MUHAMAD ALFIN YUSUF",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0097212361",
+    "TTL": "2007-11-17",
+    "Nama": "MUHAMAD RASYIID HAEKAL",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0073247521",
+    "TTL": "2007-11-16",
+    "Nama": "MUHAMMAD FARREL ARRARYA OCTAVIANO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0079739316",
+    "TTL": "2007-11-29",
+    "Nama": "NANDHARA GENDIS SUDARSONO",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0081109879",
+    "TTL": "2008-01-03",
+    "Nama": "NEYSHELLA RACHMA MINORA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076340354",
+    "TTL": "2007-09-20",
+    "Nama": "NIA RAMADHANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078997806",
+    "TTL": "2007-11-06",
+    "Nama": "NOVELA PRAVITA ALIP FITRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082160007",
+    "TTL": "2008-11-26",
+    "Nama": "NOVENTEA AURORA KARYANIA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078701498",
+    "TTL": "2007-05-13",
+    "Nama": "NURANTI MAYGA SABILLA ANANDA PUTRI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0072192686",
+    "TTL": "2007-10-22",
+    "Nama": "RAHMA FITRIANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0078215532",
+    "TTL": "2007-03-02",
+    "Nama": "RESTY RAHEL EVINDA",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0085747326",
+    "TTL": "2008-05-16",
+    "Nama": "SALSABILA PUSPA KIRANA HERIYADI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0077906646",
+    "TTL": "2007-09-09",
+    "Nama": "SEPTIA ANGGRAENI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082655392",
+    "TTL": "2008-10-09",
+    "Nama": "SILVIA OKTAVIANI",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0082026774",
+    "TTL": "2008-05-16",
+    "Nama": "SITI AISYAH",
+    "Status": "LULUS"
+  },
+  {
+    "NISN": "0076501770",
+    "TTL": "2007-02-15",
+    "Nama": "UMI LEILATUL FADILLAH",
+    "Status": "LULUS"
+  }
+    ];
+
+    function cekKelulusan() {
+        const nisnInput = document.getElementById("nisn").value;
+        const tglInput = document.getElementById("tgl_lahir").value;
+        const pageLogin = document.getElementById("page-login");
+        const pageResult = document.getElementById("page-result");
+        const contentHasil = document.getElementById("content-hasil");
+
+        const siswa = dataSiswa.find(s => s.NISN === nisnInput && s.TTL === tglInput);
+
+        if (siswa) {
+            // Sembunyikan halaman login, tampilkan halaman hasil
+            pageLogin.classList.add("hidden");
+            pageResult.style.display = "block";
+
+            if (siswa.Status === "LULUS") {
+                contentHasil.innerHTML = `
+                    <div style="margin-bottom: 10px;">Selamat Kepada </div>
+                    <div class="info-siswa">
+                        <div><strong>Nama:</strong> ${siswa.Nama}</div>
+                        <div><strong>NISN:</strong> ${siswa.NISN}</div>
+                        <div><strong>Tanggal Lahir:</strong> ${siswa.TTL}</div>
+                    </div>
+                    <div style="margin-top: 15px;">Dinyatakan</div>
+                    <div class="status-lulus">LULUS</div>
+                `;
+            } else {
+                contentHasil.innerHTML = `<div>Maaf, ${siswa.Nama} dinyatakan <strong>TIDAK LULUS</strong>.</div>`;
+            }
+        } else {
+            alert("Data tidak ditemukan! Periksa kembali NISN dan Tanggal Lahir.");
+        }
+    }
+
+    // Timer Logic
+    const targetDate = new Date("May 4, 2026 00:01:00").getTime();
+    const timer = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        document.getElementById("days").innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
+        document.getElementById("hours").innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("minutes").innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById("seconds").innerHTML = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdown-area").classList.add("hidden");
+            document.getElementById("login-form").classList.remove("hidden");
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>
